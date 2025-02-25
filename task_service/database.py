@@ -16,7 +16,6 @@ class TaskTable(Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[Optional[str]]
-    user_id: Mapped[int]
 
 
 async def create_tables():

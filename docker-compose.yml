@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  task_service:
+    build: ./task_service
+    container_name: task_service
+    ports:
+      - "8000:8000"
+      - "50051:50051"
+    networks:
+      - backend
+    environment:
+      - GRPC_SERVER_HOST=task_service:50051
+
+  reminder_service:
+    build: ./reminder_service
+    container_name: reminder_service
+    networks:
+      - backend
+    depends_on:
+      - task_service
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - backend
+    depends_on:
+      - task_service
+
+networks:
+  backend:
+    driver: bridge
